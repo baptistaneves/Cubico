@@ -1,6 +1,6 @@
 ﻿namespace Cubico.Identity.Users.Landlords.GetById;
 
-public record GetLandlordByIdResult(UserDto UserDto);
+public record GetLandlordByIdResult(UserLandlordDto UserDto);
 
 public record GetLandlordByIdQuery(Guid Id) : IQuery<GetLandlordByIdResult>;
 
@@ -14,7 +14,7 @@ public class GetByIdHandler(UserManager<ApplicationUser> userManager) : IQueryHa
                             .Include(x => x.UserRoles)
                             .ThenInclude(x => x.Role)
                             .Where(x => x.Id == query.Id)
-                            .Select(user => new UserDto
+                            .Select(user => new UserLandlordDto
                             {
                                 Id = user.Id,
                                 Name = user.Name,

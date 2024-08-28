@@ -1,8 +1,8 @@
 ﻿namespace Cubico.Identity.Users.Landlords.GetAll;
 
-public record GetAllLandLordResponse(IEnumerable<UserDto> UserDtos);
+public record GetAllLandLordResponse(IEnumerable<UserLandlordDto> UserDtos);
 
-public class GetAllEndpoint : ICarterModule
+public class GetAllLandlordsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {

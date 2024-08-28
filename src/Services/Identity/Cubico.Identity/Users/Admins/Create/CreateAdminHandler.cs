@@ -1,49 +1,48 @@
-﻿namespace Cubico.Identity.Users.Landlords.Create;
+﻿namespace Cubico.Identity.Users.Admins.Create;
 
-public record CreateLandlordResult(Guid Id, string Token, string Email, string Name);
+public record CreateAdminResult(Guid Id, string Token, string Email, string Name);
 
-public record CreateLandlordCommand(string Email, string Name, string PhoneNumber, string Address, string Password)
-    : ICommand<CreateLandlordResult>;
+public record CreateAdminCommand(string Email, string Name, string Role, string Password)
+    : ICommand<CreateAdminResult>;
 
-public class LandlordCommandValidation : AbstractValidator<CreateLandlordCommand>
+public class CreateAdminCommandValidation : AbstractValidator<CreateAdminCommand>
 {
-    public LandlordCommandValidation()
+    public CreateAdminCommandValidation()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage(LandlordErrorMessages.NameIsRequired)
-            .MinimumLength(5).WithMessage(LandlordErrorMessages.NameMinimumLength);
+            .NotEmpty().WithMessage(AdminErrorsMessage.NameIsRequired);
 
-        RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage(LandlordErrorMessages.PhoneIsRequired);
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage(AdminErrorsMessage.EmailIsRequired)
+            .EmailAddress().WithMessage(AdminErrorsMessage.EmailIsNotValid);
 
-        RuleFor(x => x.Address)
-            .NotEmpty().WithMessage(LandlordErrorMessages.AddressIsRequired)
-            .MinimumLength(10).WithMessage(LandlordErrorMessages.AddressMinimumLength);
+        RuleFor(x => x.Role)
+            .NotEmpty().WithMessage(AdminErrorsMessage.RoleIsRequired);
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage(AdminErrorsMessage.PasswordIsRequired);
     }
 }
 
-public class CreateLandlordHandler
-    (UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService)
-    : ICommandHandler<CreateLandlordCommand, CreateLandlordResult>
+public class CreateAdminHandler
+    (UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IJwtService jwtService) : ICommandHandler<CreateAdminCommand, CreateAdminResult>
 {
-    public async Task<CreateLandlordResult> Handle(CreateLandlordCommand command, CancellationToken cancellationToken)
+    public async Task<CreateAdminResult> Handle(CreateAdminCommand command, CancellationToken cancellationToken)
     {
         var newUser = new ApplicationUser
         {
             UserName = command.Email,
             Email = command.Email,
-            PhoneNumber = command.PhoneNumber,
-            Name = command.Name,
-            Address = command.Address
+            Name = command.Name
         };
 
         var createUserResult = await userManager.CreateAsync(newUser, command.Password);
         createUserResult.ValidateOperation();
 
-        var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, "Landlord");
+        var addUserToRoleResult = await userManager.AddToRoleAsync(newUser, command.Role);
         addUserToRoleResult.ValidateOperation();
 
-        return new CreateLandlordResult(newUser.Id, await GetJwtString(newUser), newUser.Email, newUser.Name);
+        return new CreateAdminResult(newUser.Id, await GetJwtString(newUser), newUser.Email, newUser.Name);
     }
 
     private async Task<string> GetJwtString(ApplicationUser user)

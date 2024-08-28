@@ -1,10 +1,10 @@
 ﻿namespace Cubico.Identity.Users.Landlords.GetAll;
 
-public record GetAllLandlordsResult(IEnumerable<UserDto> UserDtos);
+public record GetAllLandlordsResult(IEnumerable<UserLandlordDto> UserDtos);
 
 public record GetAllLandlordsQuery : IQuery<GetAllLandlordsResult>;
 
-public class GetAllHandler(UserManager<ApplicationUser> userManager) : IQueryHandler<GetAllLandlordsQuery, GetAllLandlordsResult>
+public class GetAllLandlordsHandler(UserManager<ApplicationUser> userManager) : IQueryHandler<GetAllLandlordsQuery, GetAllLandlordsResult>
 {
     public async Task<GetAllLandlordsResult> Handle(GetAllLandlordsQuery request, CancellationToken cancellationToken)
     {
@@ -13,7 +13,8 @@ public class GetAllHandler(UserManager<ApplicationUser> userManager) : IQueryHan
                             .AsNoTracking()
                             .Include(x => x.UserRoles)
                             .ThenInclude(x => x.Role)
-                            .Select(user => new UserDto
+                            .Where(x => x.UserRoles.Select(x => x.Role.Name).FirstOrDefault() == "Landlord")
+                            .Select(user => new UserLandlordDto
                             {
                                 Id = user.Id,
                                 Name = user.Name,

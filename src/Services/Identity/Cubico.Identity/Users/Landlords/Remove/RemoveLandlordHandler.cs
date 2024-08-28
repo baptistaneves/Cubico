@@ -2,13 +2,13 @@
 
 public record RemoveLandlordResult(bool IsSuccess);
 
-public record RemoveLandlordCommand(Guid id) : ICommand<RemoveLandlordResult>;
+public record RemoveLandlordCommand(Guid Id) : ICommand<RemoveLandlordResult>;
 
 public class RemoveLandlordCommandValidation : AbstractValidator<RemoveLandlordCommand>
 {
     public RemoveLandlordCommandValidation()
     {
-        RuleFor(x => x.id).NotEqual(Guid.Empty).WithMessage(LandlordErrorMessages.IdIsNotValid);
+        RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage(LandlordErrorMessages.IdIsNotValid);
     }
 }
 
@@ -16,19 +16,22 @@ public class RemoveLandlordHandler(UserManager<ApplicationUser> userManager) : I
 {
     public async Task<RemoveLandlordResult> Handle(RemoveLandlordCommand command, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync(command.id.ToString());
-        if (user is null)
-            throw new NotFoundException(LandlordErrorMessages.UserNotFound);
+        var user = await GetUserById(command.Id);
 
-        var removeUserResult = await userManager.DeleteAsync(user);
-        if (!removeUserResult.Succeeded)
-        {
-            foreach (var error in removeUserResult.Errors)
-            {
-                throw new BadRequestException(error.Description);
-            }
-        }
+        var result = await userManager.DeleteAsync(user);
+        result.ValidateOperation();
 
         return new RemoveLandlordResult(true);
+    }
+
+    private async Task<ApplicationUser> GetUserById(Guid id)
+    {
+        var user = await userManager.FindByIdAsync(id.ToString());
+        if (user is null)
+        {
+            throw new NotFoundException(LandlordErrorMessages.UserNotFound);
+        }
+
+        return user;
     }
 }

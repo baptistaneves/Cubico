@@ -16,4 +16,4 @@ global using System.Text;
 global using Cubico.Identity.Services;
 global using Microsoft.AspNetCore.Mvc;
 global using Cubico.Identity.Dtos;
-global using Cubico.Identity.Data;
+global using Cubico.Identity.Extensions;

@@ -1,6 +1,6 @@
 ﻿namespace Cubico.Identity.Users.Landlords.GetById;
 
-public record GetLandlordByIdResponse(UserDto UserDto);
+public record GetLandlordByIdResponse(UserLandlordDto UserDto);
 
 public class GetByIdEndpoint : ICarterModule
 {

@@ -22,9 +22,4 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks\BuildingBlocks.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Users\Admins\" />
-    <Folder Include="Users\Tenants\" />
-  </ItemGroup>
-
 </Project>

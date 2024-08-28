@@ -29,23 +29,26 @@ public class UpdateLandlordHandler(UserManager<ApplicationUser> userManager)
 {
     public async Task<UpdateLandlordResult> Handle(UpdateLandlordCommand command, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync(command.Id.ToString());
-        if (user is null)
-            throw new NotFoundException(LandlordErrorMessages.UserNotFound);
+        var user = await GetUserById(command.Id);
 
         user.Name = command.Name;
         user.Address = command.Address;
         user.PhoneNumber = command.PhoneNumber;
 
-        var updateUserResult = await userManager.UpdateAsync(user);
-        if (!updateUserResult.Succeeded)
-        {
-            foreach(var error in updateUserResult.Errors)
-            {
-                throw new BadHttpRequestException(error.Description);
-            }
-        }
+        var result = await userManager.UpdateAsync(user);
+        result.ValidateOperation();
 
         return new UpdateLandlordResult(true);
+    }
+
+    private async Task<ApplicationUser> GetUserById(Guid id)
+    {
+        var user = await userManager.FindByIdAsync(id.ToString());
+        if (user is null)
+        {
+            throw new NotFoundException(LandlordErrorMessages.UserNotFound);
+        }
+
+        return user;
     }
 }

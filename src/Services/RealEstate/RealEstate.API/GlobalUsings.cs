@@ -1,0 +1,9 @@
+﻿global using Carter;
+global using MediatR;
+global using Microsoft.AspNetCore.Mvc;
+global using Mapster;
+global using RealEstate.Application.Provinces.Commands.CreateProvince;
+global using RealEstate.Application.Provinces.Commands.UpdateProvince;
+global using RealEstate.Application.Dtos;
+global using RealEstate.Application.Provinces.Queries.GetProvinces;
+global using RealEstate.Application.Provinces.Queries.GetProvinceById;

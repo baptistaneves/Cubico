@@ -1,0 +1,9 @@
+﻿global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using RealEstate.Domain.Entities;
+global using RealEstate.Domain.ValueObjects;
+global using System.Reflection;
+global using RealEstate.Infrastructure.Data;
+global using RealEstate.Application.Data;

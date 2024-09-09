@@ -17,3 +17,4 @@ global using Cubico.Identity.Services;
 global using Microsoft.AspNetCore.Mvc;
 global using Cubico.Identity.Dtos;
 global using Cubico.Identity.Extensions;
+global using BuildingBlocks.Exceptions.Handler;

@@ -1,0 +1,10 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using RealEstate.Domain.Entities;
+global using BuildingBlocks.Exceptions;
+global using BuildingBlocks.CQRS;
+global using RealEstate.Application.Data;
+global using RealEstate.Domain.ValueObjects;
+global using RealEstate.Application.Dtos;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Reflection;
+global using RealEstate.Application.Exceptions;
